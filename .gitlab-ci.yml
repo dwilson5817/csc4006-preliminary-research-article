@@ -1,0 +1,8 @@
+image: texlive/texlive:latest
+
+build:
+  script:
+    - latexmk -pdf -cd -output-directory=../out -aux-directory=../out src/main.tex
+  artifacts:
+    paths:
+      - 'out/*.pdf'
