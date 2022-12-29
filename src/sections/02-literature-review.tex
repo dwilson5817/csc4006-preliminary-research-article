@@ -1,0 +1,51 @@
+\textbf{Mining software repositories:} The mining software repositories (MSR) field analyses software repositories to find actionable information about software projects~\cite{msrconf}.
+In MSR studies, researchers extract data from a repository to produce evidence to answer a research question~\cite{road_ahead_for_msr}.
+While software repositories are typically used as historical records of the software development process, MSR attempts to use the information contained within them to guide future decisions.
+
+Many tools exist to analyse software evolution but these primarily focus on metadata.
+For example, one such tool is Boa~\cite{boa} which uses a domain-specific language (DSL) to describe how to mine a selection of software repositories from SourceForge and GitHub.
+This enables researchers to write DSL for questions like ``How many files are changed on average per commit in projects which use Java?''.
+The tool will then iterate through each commit in every Java project on SourceForge and GitHub to produce the answer.
+Boa, however, does not allow for the running of a specific tool on each iteration but rather simply extracting metadata from the commits of the repository.
+
+Similarly to Boa,~\cite{closer} introduces CLOSER which is a DSL for metadata across multiple types of VCS'.
+This allows for the conversion of a software repository from one type of VCS to another.
+CLOSER primarily focuses on the metadata of a repository (as opposed to each version of code stored within in it) but has provided a starting point for research into this area.
+
+Another is example is described in \cite{libvcs4j} which introduces LibVCS4j, a Java library which enables the mining of software repositories.
+LibVCS4j supports multiple types of repository and abstracts the specific VCS away at an API level to enable the mining of data from multiple types of repositories.
+Again, however, this library primarily focuses on enabling the mining of metadata from the repository as opposed to performing analysis on the code itself.
+
+\cite{cvsgrab} describes CVSgrab is a tool for visualizing metadata of a CVS repository (an older VCS than Git).
+This allows for visualization of different metadata such as the types of files and authors of lines of code.
+The tool produces a graph which shows how this metadata changes over time.
+CVSgrab however, is built for CVS and doesn't allow the running of any tool on each version of the software but merely one type of visualization of the data contained within the repository.
+
+\cite{mjgit} describes MJgit, a tool which performs code analysis on changes to code in a project by understanding how these changes affect the code.
+This allows for better textual search of the source code by ignoring cases where methods were simply moved but their functionality did not change (this would be registered in Git as line deletions then line additions, but wouldn't be included in the search results for MJgit) allowing for more accurate searching of the repository.
+
+\textbf{Source code analytics:}~\cite{sonarqube} compared the features of the three most commonly presented tools for static code analysis in research: Cppcheck, FindBugs and SonarQube.
+The finding was of all the features compared, SonarQube provided the greatest feature set.
+SonarQube also supports more languages than the other two where Cppcheck only supports C/C++ and FindBugs only supports Java.
+Therefore, SonarQube could be used to perform static code analysis on many types of project, and therefore a good potential candidate for a tool to validate any approach.
+
+\cite{java_ci_sca} investigates the use of static code analysis in the CI/CD pipelines of 20 open-source Java projects.
+A majority of projects used tool called CheckStyle which checks adherence to a set of rules on code style.
+CheckStyle is another tool which could be used to validate the approach by understanding how rule violations vary over time.
+Further, the use of GitSlice in the CI/CD pipeline would enable developers to continually run their static code analysis tools on previous versions of the project.
+For example, running GitSlice upon push to a mainline or release branch would ensure older versions are continually checked.
+
+\cite{li_2020} analysed the benefits and limitations of Checkmarx, a common static application security testing (SAST).
+This is another good example of a tool which could be used to validate the approach by creating known vulnerable code between specific commits and testing to see if the tool is able to use Checkmarx to find the vulnerability.
+
+\textbf{Running at scale:}~\cite{torcpy} describes torcpy, a load-balancing Python library which manages the execution of multiple asynchronous tasks and supports OpenMPI which is an open-source MPI implementation that is widely used on computing clusters including Perlmutter, the 8th most powerful supercomputer according to the Nov 2022 TOP500 rankings~\cite{perlmutter}.
+This enables multiple versions of the program to run across nodes in a cluster, balancing workload to ensure optimal use of resources.
+
+Some existing work has been done in relation to accessing Git repositories in high-performance computing environments such as RepoFS~\cite{repofs}, a tool for accessing multiple versions of the repository.
+RepoFS exposes the commits of the repository as a virtual filesystem, ordered in a tree structure by metadata from the commit by both commit ID and by date of the commit.
+Use of RepoFS would allow a highly parallelised analysis to be performed on a shared filesystem against a single copy of a repository rather than making multiple copies each at a specific point.
+
+Running multiple versions of the same program can lead to issues, for example SonarQube will fail to run if another instance is already scanning the same project~\cite{sonarqube_parallel}.
+Containers, such as Docker, enable the isolation of a process from the rest of the operating system and ensures that the process will run predictably across different platforms~\cite{container_benefits}.
+Running the code analysis tool inside a container also means it will be isolated (including its filesystem) from the other processes on the system allowing for multiple versions of the same tool to run simultaneously without interacting with each other.
+An analysis of Docker in high-performance environments shows that this also provides performance similar to that of running the software natively (i.e.\ directly on the operating system without any visualisation) and much greater than that of running it inside virtual machines~\cite{docker_hpc}.
